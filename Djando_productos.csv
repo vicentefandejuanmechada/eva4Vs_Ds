@@ -1,4 +1,4 @@
-Codigo Producto,NombreProducto,Proveedor,Categoría,CantidadPorUnidad,PrecioUnidad,UnidadesEnExistencia
+CodigoProducto,NombreProducto,Proveedor,Categoría,CantidadPorUnidad,PrecioUnidad,UnidadesEnExistencia
 1211984001,Té Dharamsala,Exotic Liquids,Bebidas,10 cajas x 20 bolsas,18.00 €,39
 1211984003,Cerveza tibetana Barley,Exotic Liquids,Bebidas,24 - bot. 12 l,19.00 €,17
 1211984004,Sirope de regaliz,Exotic Liquids,Condimentos,12 - bot. 550 ml,10.00 €,13

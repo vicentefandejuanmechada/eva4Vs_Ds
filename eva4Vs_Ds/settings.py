@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'eva4',
         'USER': 'postgres',
-        'PASSWORD': '12345',
+        'PASSWORD': '1234', #TODO: CAMBIAR CONTRASEÑA
         'HOST': '127.0.0.1',
         'DATABASE_PORT': '5432',
     }

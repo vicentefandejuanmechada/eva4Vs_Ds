@@ -1,17 +1,18 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
 </head>
 <body>
+  <button>Cargar Masivamente</button>
 
-    
-<table class="default">
+  {% if productos %}
+  <table class="default">
     <tr>
       <th>Codigo producto</th>
       <th>nombre</th>
@@ -23,21 +24,13 @@
       <th>stock</th>
     </tr>
 
-    {%  for producto in prodductos %}
-    <tr>
-      <td>{{ producto.codproducto }}</td>
-      <td>{{ producto.nombreproducto }}</td>
-      <td>{{ producto.provedor }}</td>
-      <td>{{ producto.categoria }}</td>
-      <td>{{ producto.cantidad_x_unidad }}</td>
-      <td>{{ producto.valor_peso }}</td>
-      <td>{{ producto.valor_euro }}</td>
-      <td>{{ producto.stock }}</td>
-      <!-- <td> <img src="{% static 'barcode/'%}{{alumno.rut}}.jpg" width="100" height="50"> </td> -->
-  
-  
-    </tr>
-    {%  endfor %}
-</table>
+
+    <!-- TODO: ARREGLAR TABLA -->
+    {% for producto in productos %}
+     <p>{{ producto.nombreproducto }}</p>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>{{ error }}</p>
+  {% endif %}
 </body>
-</html>
