@@ -30,7 +30,7 @@ def producto(request):
         return render(request, "productos.html", {"error": "No hay productos"})
 
 
-def cargaMasiva(self, request):
+def cargaMasiva(request):
     with open(
         os.path.join(os.path.dirname(__file__), "../Djando_productos.csv"),
         encoding="utf-8",

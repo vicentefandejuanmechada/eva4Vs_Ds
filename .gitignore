@@ -135,3 +135,11 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+
+
+eva4Vs_Ds/__pycache__/
+Modelos/__pycache__/
+
+eva4Vs_Ds/__pycache__/
+Modelos/migrations/__pycache__/
