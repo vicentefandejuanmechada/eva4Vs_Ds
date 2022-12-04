@@ -8,7 +8,50 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>clientes</h1>
+    {% if cliente %}
+    <table class="default">
+      <tr>
+        <th>Rut</th>
+        <th>Numero cliente</th>
+        <th>Fecha ingreso</th>
+        <th>Apellido P</th>
+        <th>Apellido M</th>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Telefono</th>
+        <th>Fecha Nacimiento</th>
+      </tr>
+  
+      <!-- TODO: ARREGLAR TABLA -->
+      {% for cliente in cliente %}
+     
+      
+        <!-- <td>{{ clientes.rut }}</td> -->
+<!-- 
+        <p>{{ cliente.fecha_registro }}</p>
+        
+        <p>{{ cliente.apellido_p }}</p> -->
+        <tr>
+        <td></td>
+        <td></td>
+        <td>{{ cliente.fecha_nacimiento }}</td>
+        <td>{{ cliente.apellido_p }}</td> 
+        <td>{{ cliente.apellido_m }}</td>
+       
+        <td>{{ cliente.correo }}</td>
+        <td>{{ cliente.telefono }}</td>
+        <td></td>
+        <td>{{ cliente.fecha_nacimiento }}</td> 
+        <!-- <td> <img src="{% static 'barcode/'%}{{alumno.rut}}.jpg" width="100" height="50"> </td> -->
+        </tr>
     
-    {% endfor %}
+ 
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>{{ error }}</p>
+    {% endif %}
+    
+ 
 </body>
-</html>
