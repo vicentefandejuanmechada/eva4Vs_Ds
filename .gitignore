@@ -138,8 +138,5 @@ GitHub.sublime-settings
 
 
 
-eva4Vs_Ds/__pycache__/
-Modelos/__pycache__/
-
-eva4Vs_Ds/__pycache__/
-Modelos/migrations/__pycache__/
+/**/__pycache__/
+/**/migrations/

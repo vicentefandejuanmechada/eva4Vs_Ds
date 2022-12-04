@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from Modelos.views import producto
+from Modelos.views import producto, carga_masiva
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('productos/', producto),
+    path('', producto), # ???
+    path('cargamasiva/', carga_masiva),
 ]

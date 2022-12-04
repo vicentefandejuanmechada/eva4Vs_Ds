@@ -9,8 +9,13 @@
   <title>Document</title>
 </head>
 <body>
-  <button>Cargar Masivamente</button>
-
+  <a
+    target="_blank"
+    class="btn btn-info pull-right"
+    href="cargamasiva"
+  >
+    Check It Out
+  </a>
   {% if productos %}
   <table class="default">
     <tr>
@@ -24,10 +29,9 @@
       <th>stock</th>
     </tr>
 
-
     <!-- TODO: ARREGLAR TABLA -->
     {% for producto in productos %}
-     <p>{{ producto.nombreproducto }}</p>
+    <p>{{ producto.nombreproducto }}</p>
     {% endfor %}
   </table>
   {% else %}

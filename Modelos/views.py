@@ -29,13 +29,14 @@ def producto(request):
             return render(request, "productos.html", {"productos": productos})
         return render(request, "productos.html", {"error": "No hay productos"})
 
-
-def cargaMasiva(request):
+def carga_masiva(request):
+    """carga masiva de productos"""
     with open(
         os.path.join(os.path.dirname(__file__), "../Djando_productos.csv"),
-        encoding="utf-8",
+        encoding="latin1",
     ) as csvfile:
         reader = csv.DictReader(csvfile)
+        print("+++++++++++CARGAAAAAA+++++++++")
         prods = [
             Producto(
                 codproducto=row["CodigoProducto"],
@@ -51,6 +52,7 @@ def cargaMasiva(request):
         print(bulk)
         productos = Producto.objects.all()
         return render(request, "productos.html", {"productos": productos})
+        # TODO: redirect to products
 
 
 ##NO DEVUELVE LOS PRODUCTOS NOSE PORQUE XD
