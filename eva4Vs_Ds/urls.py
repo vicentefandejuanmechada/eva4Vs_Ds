@@ -20,4 +20,5 @@ from Modelos.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cargamasiva/', carga_masiva),
+    path('cargaclient/',carga_cliente),
 ]

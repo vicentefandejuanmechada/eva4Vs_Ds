@@ -7,7 +7,7 @@ import os
 from django.shortcuts import render
 from django.views import View
 
-from Modelos.models import Producto  ##!: No module named 'Modelos.models'##
+from Modelos.models import Producto,clientes,venta  ##!: No module named 'Modelos.models'##
 
 # from
 # Create your views here.
@@ -30,6 +30,15 @@ def producto(request):
         else:
             return render(request, "datosprod.html", {"error": "No hay productos"})
 
+
+def cliente(request):
+    if request.method == "GET":
+        cliente = clientes.objects.all()
+        if cliente:
+            return render (request, "clientes.html", {"cliente": cliente})
+        else:
+            return render (request, "clientes.html", {"error": "no hay cliente"})
+
 def carga_masiva(request):
     """carga masiva de productos"""
     with open(
@@ -40,6 +49,7 @@ def carga_masiva(request):
         print("+++++++++++CARGAAAAAA+++++++++")
         prods = [
             Producto(
+                #se ve como tabla ahora xd
                 codproducto=row["Codigo Producto"],
                 nombreproducto=row["Nombre Producto"],
                 provedor=row["Proveedor"],
@@ -54,3 +64,29 @@ def carga_masiva(request):
         productos = Producto.objects.all()
         return render(request, "datosprod.html", {"productos": productos})
         # TODO: redirect to products
+
+
+def carga_cliente(request):
+     with open(
+        os.path.join(os.path.dirname(__file__), "../cliente.csv"),
+        encoding="latin1",
+    ) as csvfile:
+        reader = csv.DictReader(csvfile)
+        clients = [
+            clientes(
+              rut=row["Rut"], 
+              fecha_registro=row["Fecha Ingreso"],
+              apellido_p=row["Apellido Paterno"],
+              apellido_m=row["Apellido Materno"],
+              correo=row["Correo"],
+              telefono=row["Telefono"],
+              fecha_nacimiento=row["Fecha Nacimiento"]
+            )
+            for row in reader
+        ]
+        bulk =clientes.objects.bulk_create(clients)
+        print(bulk)
+        cliente = clientes.objects.all()
+        return render(request, "clientes.html", {"cliente":cliente})
+         # TODO: redirect to clients
+        
