@@ -4,8 +4,10 @@ import csv
 # from 
 # Create your views here.
 
-def importdta ():
-    cargarcvs = 'C:/csv/Djando_productos.csv'
+##NO DEVUELVE LOS PRODUCTOS NOSE PORQUE XD
+
+def importdta():
+    cargarcvs = 'Djando_productos.csv'
     with open(cargarcvs) as f:
       reader = csv.reader(f,delimiter=";")
       for row in reader:
@@ -16,7 +18,3 @@ def importdta ():
 def cargardatos(request):
     prod= producto.objects.all()
     return render(request, "productos.html",{"prodductos": prod})
-# def cargardatos(request):
-#     productos = producto.objects.all()
-
-#     return render(request, "productos.html",{"prodductos": productos})
