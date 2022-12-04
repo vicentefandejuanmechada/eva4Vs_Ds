@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class producto(models.Model):
+class Producto(models.Model):
     codproducto = models.CharField(max_length=50)
     nombreproducto = models.CharField(max_length=100)
     provedor = models.CharField(max_length=50)
