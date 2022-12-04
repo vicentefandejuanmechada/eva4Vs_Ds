@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+<body>
+  <a
+    target="_blank"
+    class="btn btn-info pull-right"
+    href="cargamasiva"
+  >
+    Check It Out
+  </a>
+  {% if productos %}
+  <table class="default">
+    <tr>
+      <th>Codigo producto</th>
+      <th>nombre</th>
+      <th>proveedor</th>
+      <th>categoria</th>
+      <th>cantidad en cada unidad</th>
+      <th>valor peso</th>
+      <th>valor euro</th>
+      <th>stock</th>
+    </tr>
+
+    <!-- TODO: ARREGLAR TABLA -->
+    {% for productos in productos %}
+   
+    <tr>
+      <td>{{ productos.codproducto }}</td>
+      <td>{{ productos.nombreproducto }}</td>
+      <td>{{ productos.provedor }}</td>
+      <td>{{ productos.categoria }}</td>
+      <td>{{ productos.cantidad_x_unidad }}</td>
+      <td>{{ productos.valor_peso }}</td>
+      <td>{{ productos.valor_euro }}</td>
+      <td>{{ productos.stock }}</td>
+      <!-- <td> <img src="{% static 'barcode/'%}{{alumno.rut}}.jpg" width="100" height="50"> </td> -->
+  
+  
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>{{ error }}</p>
+  {% endif %}
+</body>
