@@ -5,7 +5,10 @@ import csv
 # Create your views here.
 
 ##NO DEVUELVE LOS PRODUCTOS NOSE PORQUE XD
-
+#EL diego va a realizar la parte de los graficos y wea
+#yo(vicente i neeed help) con cargar los datos cvs con reglas 
+#codigo de barra y vender producto no esta destinado a ni uno de los 2
+# correos masivos esta casi realizado por las mismas clases hay q adaptarlo
 def importdta():
     cargarcvs = 'Djando_productos.csv'
     with open(cargarcvs) as f:
