@@ -27,24 +27,19 @@
       {% for cliente in cliente %}
      
       
-        <!-- <td>{{ clientes.rut }}</td> -->
-<!-- 
-        <p>{{ cliente.fecha_registro }}</p>
-        
-        <p>{{ cliente.apellido_p }}</p> -->
+ 
         <tr>
-        <td></td>
-        <td></td>
+        
+        <td>{{ cliente.rut }}</td>
+        <td>{{ cliente.numero_cliente }}</td>
         <td>{{ cliente.fecha_nacimiento }}</td>
         <td>{{ cliente.apellido_p }}</td> 
         <td>{{ cliente.apellido_m }}</td>
-       
+        <td>{{ cliente.nombre }}</td>
         <td>{{ cliente.correo }}</td>
         <td>{{ cliente.telefono }}</td>
-        <td></td>
         <td>{{ cliente.fecha_nacimiento }}</td> 
-        <!-- <td> <img src="{% static 'barcode/'%}{{alumno.rut}}.jpg" width="100" height="50"> </td> -->
-        </tr>
+                </tr>
     
  
       {% endfor %}
