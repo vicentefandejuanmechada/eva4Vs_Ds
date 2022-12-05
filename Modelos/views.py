@@ -145,37 +145,38 @@ def transformar_euro_peso(euro):
 
 # toma el codigo pero no lo compara bien con los demas codigos
 
-# version imitando  eva3
-global listaproductos
-listaproductos = Producto.objects.all()
+# # version imitando  eva3
+# global listaproductos
+# listaproductos = Producto.objects.all()
 
 
-def obtproductoinfo(request):
-    codigoprod = request.GET['codproductos']
-    objetoprod = retornarprod(codigoprod)            
-    return render(request, "detalleprod.html", {"producto": objetoprod})
-
-    
-def retornarprod(codproducto):
-    for producto in listaproductos:
-        if str(producto.codproducto) == codproducto:
-            return producto
-    return "null"
-
-# # version diego copilot
 # def obtproductoinfo(request):
-#     listaproductos = Producto.objects.all()
-#     if request.method == "GET":
-#         codigoprod = request.GET['codproductos']
-#         for producto in listaproductos:
-#             if str(producto.codproducto) == codigoprod:
-#                 return render(request, "detalleprod.html", {"producto": producto})
+#     codigoprod = request.GET['codproductos']
+#     objetoprod = retornarprod(codigoprod)            
+#     return render(request, "detalleprod.html", {"producto": objetoprod})
 
     
 # def retornarprod(codproducto):
-#     listaproductos = Producto.objects.all()
 #     for producto in listaproductos:
 #         if str(producto.codproducto) == codproducto:
 #             return producto
 #     return "null"
+
+# # version diego copilot
+def obtproductoinfo(request):
+    productolist = Producto.objects.all()
+    if request.method == "GET":
+        codigoprod = request.GET['codproductos']
+        objproduc  = retornarprod['codiprod']
+        for producto in productolist:
+            if str(producto.codproducto) == codigoprod:
+                return render(request, "detalleprod.html", {"producto": objproduc})
+
+    
+def retornarprod(codproducto):
+    productolist = Producto.objects.all()
+    for producto in productolist:
+        if str(producto.codproducto) == codproducto:
+            return producto
+    return "null"
 
