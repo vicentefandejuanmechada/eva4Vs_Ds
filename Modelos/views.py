@@ -203,11 +203,14 @@ def verproductos(request):
 
 
 # metodo para crear el pdf de los productos(funciona)
-def creararchivoPDF(nombre):
+def creararchivoPDF(nombre, story):
     rut = nombre[0] + nombre[1] + nombre[2]
     ruta = os.path.join(__file__, f'../pdf/{nombre}.pdf')
     doc = SimpleDocTemplate(ruta, pagesize=A2, encrypt=str(rut))
-    print("="*8, ruta)
+    doc.build(story)
+
+
+def crearstory():
     story = []
     datos = [['codigo barra', "nombre producto",
               "cantidad por unidad", "precio PCL", "Precio euro", "proveedor"]]
@@ -224,14 +227,14 @@ def creararchivoPDF(nombre):
                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BACKGROUND', (0, 0), (-1, 0), colors.green)]))
     story.append(t)
-    doc.build(story)
-
+    return story
 
 # metodo para enviar el correo con el pdf adjunto(funciona a medias)
 def correoadjunto(request):
     lista = clientes.objects.all()
+    pdf = crearstory()
     for cliente in lista:
-        creararchivoPDF(cliente.rut)
+        creararchivoPDF(cliente.rut, pdf)
         print("="*5 + "enviado" + "="*5)
         email = EmailMessage(
             f'Hola {cliente.nombre}.',
@@ -250,7 +253,7 @@ def correoadjunto(request):
 
 def graficos(request):
     lista = clientes.objects.all()
-    return render(request, "grafico.html",{"lista":lista})
+    return render(request, "grafico.html",{"productos":lista})
 
 
 # def correoadjunto(request):
