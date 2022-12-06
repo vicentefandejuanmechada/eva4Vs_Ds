@@ -6,8 +6,21 @@ import csv
 import os
 from django.shortcuts import render
 from django.views import View
-
-from Modelos.models import Producto,clientes,venta  ##!: No module named 'Modelos.models'##
+import barcode
+from barcode.writer import ImageWriter
+from random import randint
+import re
+from django.core.mail import send_mail
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A2
+from reportlab.lib.units import cm
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+# !: No module named 'Modelos.models'##
+from Modelos.models import Producto, clientes, venta
+from django.core.mail import EmailMessage
+from pathlib import Path
 
 # from
 # Create your views here.
@@ -20,7 +33,7 @@ from Modelos.models import Producto,clientes,venta  ##!: No module named 'Modelo
 # codigo de barra y vender producto no esta destinado a ni uno de los 2
 # correos masivos esta casi realizado por las mismas clases hay q adaptarlo
 
-
+# funcion para obtener productos(fuinciona)
 def producto(request):
     """obtiene todos los productos"""
     if request.method == "GET":
@@ -28,34 +41,42 @@ def producto(request):
         if productos:
             return render(request, "datosprod.html", {"productos": productos})
         else:
+            # ! ruta principal producto
             return render(request, "datosprod.html", {"error": "No hay productos"})
 
+# funcion para obtener clientes(funciona)
 
-def cliente(request):
+
+def cliente(request):  # obtener
     if request.method == "GET":
         cliente = clientes.objects.all()
         if cliente:
-            return render (request, "clientes.html", {"cliente": cliente})
+            return render(request, "clientes.html", {"cliente": cliente})
         else:
-            return render (request, "clientes.html", {"error": "no hay cliente"})
+            return render(request, "clientes.html", {"error": "no hay cliente"})
 
-def carga_masiva(request):
+# funcion para obtener lista con todos los productos(funciona)
+
+
+def carga_masiva(request):  # ! ruta boton cargar
     """carga masiva de productos"""
+    #!comprobar si ya se insertaron datos y cancelar botn
     with open(
         os.path.join(os.path.dirname(__file__), "../Djando_productos.csv"),
-        encoding="latin1",
+        encoding="utf-8",
     ) as csvfile:
         reader = csv.DictReader(csvfile)
-        print("+++++++++++CARGAAAAAA+++++++++")
         prods = [
             Producto(
-                #se ve como tabla ahora xd
-                codproducto=row["Codigo Producto"],
+                # se ve como tabla ahora xd
                 nombreproducto=row["Nombre Producto"],
                 provedor=row["Proveedor"],
+                categoria=row["Categoria"],
                 cantidad_x_unidad=row["Cantidad Por Unidad"],
                 valor_euro=row["Precio Unidad"],
+                valor_peso=transformar_euro_peso(row["Precio Unidad"]),
                 stock=row["Unidades En Existencia"],
+                codproducto=crearcodigobarra(row["Codigo Producto"]),
             )
             for row in reader
         ]
@@ -65,28 +86,155 @@ def carga_masiva(request):
         return render(request, "datosprod.html", {"productos": productos})
         # TODO: redirect to products
 
-
+# funcion para obtener lista con todos los clientes(funciona)
 def carga_cliente(request):
-     with open(
+    with open(
         os.path.join(os.path.dirname(__file__), "../cliente.csv"),
-        encoding="latin1",
+        encoding="utf-8",
     ) as csvfile:
         reader = csv.DictReader(csvfile)
         clients = [
             clientes(
-              rut=row["Rut"], 
-              fecha_registro=row["Fecha Ingreso"],
-              apellido_p=row["Apellido Paterno"],
-              apellido_m=row["Apellido Materno"],
-              correo=row["Correo"],
-              telefono=row["Telefono"],
-              fecha_nacimiento=row["Fecha Nacimiento"]
+                rut=generrut(idx),
+                numero_cliente=row["NumeroCliente"],
+                fecha_registro=row["Fecha Ingreso"],
+                apellido_p=row["Apellido Paterno"],
+                apellido_m=row["Apellido Materno"],
+                nombre=row["Nombres"],
+                correo=genecorreo(
+                    row["Nombres"], row["Apellido Paterno"], row["Apellido Materno"]),
+                telefono=crear_num(idx),
+                fecha_nacimiento=row["Fecha Nacimiento"]
             )
-            for row in reader
+            for idx, row in enumerate(reader)
         ]
-        bulk =clientes.objects.bulk_create(clients)
-        print(bulk)
+        bulk = clientes.objects.bulk_create(clients)
         cliente = clientes.objects.all()
-        return render(request, "clientes.html", {"cliente":cliente})
-         # TODO: redirect to clients
-        
+        return render(request, "clientes.html", {"cliente": cliente})
+        # TODO: redirect to clients
+# funcion para generar correo cliente(funciona)
+
+def genecorreo(nombre, apellido1, apellido2):
+    return (nombre[0]+apellido1+apellido2[0]).lower()+"@djangocorreo.tk"
+
+# funcion para generar rut cliente(funciona)
+
+
+def generrut(index):
+    rut = 1435566 + index
+    rutdv = str(rut) + "-" + str(4 if index == 0 else randint(1, 9))
+    return str(rutdv)
+
+# funcion para generar codigo de barra(funciona)
+
+
+def crearcodigobarra(numero):
+    code128 = barcode.get_barcode_class("code128")
+    my_code = code128(numero, writer=ImageWriter())
+    with open("eva4Vs_Ds/static/barcode/"+str(numero)+".png", "wb") as f:
+        my_code.write(f)
+    return my_code.get_fullcode()
+
+# funcion para generar numero telefono(funciona)
+
+
+def crear_num(index):
+    return str(1435566 + index)
+
+# funcion para transformar euro a peso(funciona)
+
+
+def transformar_euro_peso(euro):
+    # regex para  eliminar "€"
+    euro = re.sub(r"€", "", euro)
+    return int(float(euro) * 900)
+
+
+global productolist
+productolist = Producto.objects.all()
+
+# funcion que obtiene los parametros del producto buscado
+
+def publicidad(request):
+    return render(request, "publicidad.html")
+
+def obtproductoinfo(request):
+    codigoprod = request.GET['codproducto']
+    objproduc = retornarprod(codigoprod)
+    return render(request, "detalleprod.html", {"producto": objproduc})
+
+# retorna el producto en caso de existir
+
+
+def retornarprod(codproducto):
+    for productos in productolist:
+        if str(productos.codproducto) == codproducto:
+            return productos
+    return "null"
+
+# funcion prara crear pdf (esperando confirmacion)
+
+
+# metodo vender(funciona)
+def venderprod(request):
+    if request.method == "POST":
+        stock = request.POST['cantidad_input']
+        id_venta = request.POST['codigo_input']
+        producto_venta = Producto.objects.get(codproducto=id_venta)
+        if int(stock) <= int(producto_venta.stock):
+            producto_venta.stock = int(producto_venta.stock) - int(stock)
+            producto_venta.save()
+            return render(request, "compra_exitosa.html")
+        else:
+            return render(request, "compra_fallida.html")
+
+# metodo para poder ver  todos los productos en la base de datos
+
+
+def verproductos(request):
+    productos = Producto.objects.all().order_by("codproducto")
+    return render(request, "verproductos.html", {"productos": productos})
+
+
+
+# metodo para crear el pdf de los productos(funciona)
+def creararchivoPDF(nombre):
+    doc = SimpleDocTemplate(os.path.dirname(__file__)+"/pdf/"+nombre+".pdf", pagesize=A2)
+    story = []
+    datos = [['codigo barra', "nombre producto",
+              "cantidad por unidad", "precio PCL", "Precio euro", "proveedor"]]
+    listproductos = Producto.objects.all()
+    for prod in listproductos:
+        datos.append([prod.codproducto+".png", prod.codproducto, prod.nombreproducto,
+                     prod.valor_peso, prod.valor_euro, prod.provedor])
+    t = Table(datos, colWidths=[5 * cm, 5 * cm,
+              8 * cm, 5 * cm, 5 * cm, 8 * cm])
+    t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                           ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+                           ('BACKGROUND', (0, 0), (-1, 0), colors.green)]))
+    story.append(t)
+    doc.build(story)
+
+# metodo para enviar el correo con el pdf adjunto(funciona a medias)
+def correoadjunto(request):
+    creararchivoPDF("productos")
+    # lista = clientes.objects.all()
+    # if lista == None:
+    #     return render(request, "index.html")
+    # for cliente in lista:
+    email = EmailMessage(
+        'Hola '
+        #+cliente.nombre
+        ,
+        'Este es un correo de prueba',
+        'diego.soto.mino@gmail.com',
+        ['vicente.sepulveda.campos@cftsa.cl'], #TODO: cambiar por el correo del cliente
+        reply_to=['diego.soto.mino@gmail.com'],
+        headers={'Message-ID': 'foo'},
+    )
+    email.attach_file(os.path.join(os.path.dirname(__file__), "pdf/productos.pdf"))
+    
+    email.send()
+    return render(request, "enviado.html")
+
+#  os.path.join(os.path.dirname(__file__), "../cliente.csv"),

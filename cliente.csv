@@ -1,7 +1,7 @@
-Rut,Numero Cliente,Fecha Ingreso,Apellido Paterno,Apellido Materno,Nombres,Correo,Telefono,Fecha Nacimiento
-                    ,260,02/05/2015,AGUILERA,ARAYA,MARIA JOSE,,,07/18/1987
-                    ,262,02/05/2015,DOCUMENT,FERNANDEZ,ANDRE ALFREDO,,,07/19/1987
-                    ,259,02/05/2015,ZEGARRA,CHOQUE,SATURNINA MARGARITA,,,03/12/2001
+Rut,NumeroCliente,Fecha Ingreso,Apellido Paterno,Apellido Materno,Nombres,Correo,Telefono,Fecha Nacimiento
+    ,260,02/05/2015,AGUILERA,ARAYA,MARIA JOSE,,,07/18/1987
+    ,262,02/05/2015,DOCUMENT,FERNANDEZ,ANDRE ALFREDO,,,07/19/1987
+    ,259,02/05/2015,ZEGARRA,CHOQUE,SATURNINA MARGARITA,,,03/12/2001
                     ,258,02/05/2015,CONTRERAS,SANDOVAL,NATALY ELBA,,,05/14/1996
                     ,261,02/05/2015,VARGAS,MONROY,LAWREN CAMILA,,,07/20/1987
                     ,285,02/06/2015,ORTIZ,ROMERO,ALESSANDRA ANDREA,,,07/21/1987
