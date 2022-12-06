@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views import View
 import barcode
 from barcode.writer import ImageWriter
+
 from random import randint
 import re
 from django.core.mail import send_mail
@@ -15,7 +16,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A2
 from reportlab.lib.units import cm
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
 # !: No module named 'Modelos.models'##
 from Modelos.models import Producto, clientes, venta
@@ -87,6 +88,8 @@ def carga_masiva(request):  # ! ruta boton cargar
         # TODO: redirect to products
 
 # funcion para obtener lista con todos los clientes(funciona)
+
+
 def carga_cliente(request):
     with open(
         os.path.join(os.path.dirname(__file__), "../cliente.csv"),
@@ -113,6 +116,7 @@ def carga_cliente(request):
         return render(request, "clientes.html", {"cliente": cliente})
         # TODO: redirect to clients
 # funcion para generar correo cliente(funciona)
+
 
 def genecorreo(nombre, apellido1, apellido2):
     return (nombre[0]+apellido1+apellido2[0]).lower()+"@djangocorreo.tk"
@@ -155,8 +159,10 @@ productolist = Producto.objects.all()
 
 # funcion que obtiene los parametros del producto buscado
 
+
 def publicidad(request):
     return render(request, "publicidad.html")
+
 
 def obtproductoinfo(request):
     codigoprod = request.GET['codproducto']
@@ -196,45 +202,71 @@ def verproductos(request):
     return render(request, "verproductos.html", {"productos": productos})
 
 
-
 # metodo para crear el pdf de los productos(funciona)
 def creararchivoPDF(nombre):
-    doc = SimpleDocTemplate(os.path.dirname(__file__)+"/pdf/"+nombre+".pdf", pagesize=A2)
+    rut = nombre[0] + nombre[1] + nombre[2]
+    ruta = os.path.join(__file__, f'../pdf/{nombre}.pdf')
+    doc = SimpleDocTemplate(ruta, pagesize=A2, encrypt=str(rut))
+    print("="*8, ruta)
     story = []
     datos = [['codigo barra', "nombre producto",
               "cantidad por unidad", "precio PCL", "Precio euro", "proveedor"]]
     listproductos = Producto.objects.all()
     for prod in listproductos:
-        datos.append([prod.codproducto+".png", prod.codproducto, prod.nombreproducto,
+        barcode = Image('eva4Vs_Ds/static/barcode/' +
+                        prod.codproducto+'.png', width=100, height=50)
+        datos.append([barcode, prod.nombreproducto, prod.cantidad_x_unidad,
                      prod.valor_peso, prod.valor_euro, prod.provedor])
-    t = Table(datos, colWidths=[5 * cm, 5 * cm,
-              8 * cm, 5 * cm, 5 * cm, 8 * cm])
+
+    t = Table(datos, colWidths=[5 * cm, 8 * cm,
+                                8 * cm, 5 * cm, 5 * cm, 8 * cm])
     t.setStyle(TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
                            ('BACKGROUND', (0, 0), (-1, 0), colors.green)]))
     story.append(t)
     doc.build(story)
 
+
 # metodo para enviar el correo con el pdf adjunto(funciona a medias)
 def correoadjunto(request):
-    creararchivoPDF("productos")
-    # lista = clientes.objects.all()
-    # if lista == None:
-    #     return render(request, "index.html")
-    # for cliente in lista:
-    email = EmailMessage(
-        'Hola '
-        #+cliente.nombre
-        ,
-        'Este es un correo de prueba',
-        'diego.soto.mino@gmail.com',
-        ['vicente.sepulveda.campos@cftsa.cl'], #TODO: cambiar por el correo del cliente
-        reply_to=['diego.soto.mino@gmail.com'],
-        headers={'Message-ID': 'foo'},
-    )
-    email.attach_file(os.path.join(os.path.dirname(__file__), "pdf/productos.pdf"))
-    
-    email.send()
+    lista = clientes.objects.all()
+    for cliente in lista:
+        creararchivoPDF(cliente.rut)
+        print("="*5 + "enviado" + "="*5)
+        email = EmailMessage(
+            f'Hola {cliente.nombre}.',
+            'Este es un correo de prueba',
+            'diego.soto.mino@gmail.com',
+            [cliente.correo],
+            reply_to=['diego.soto.mino@gmail.com'],
+            headers={'Message-ID': 'foo'},
+        )
+        email.attach_file(os.path.join(
+            os.path.dirname(__file__), f'pdf/{cliente.rut}.pdf'))
+
+        email.send()
     return render(request, "enviado.html")
 
-#  os.path.join(os.path.dirname(__file__), "../cliente.csv"),
+
+def graficos(request):
+    lista = clientes.objects.all()
+    return render(request, "grafico.html",{"lista":lista})
+
+
+# def correoadjunto(request):
+#     listadeclientes = clientes.objects.all()
+
+#     for cliente in listadeclientes:
+#         creararchivoPDF("producto")
+#         email = EmailMessage(
+#             'Hola ',
+#             'Este es un correo de prueba',
+#             'diego.soto.mino@gmail.com',
+#             [cliente.correo], #TODO: cambiar por el correo del cliente
+#             reply_to=['diego.soto.mino@gmail.com'],
+#           headers={'Message-ID': 'foo'},
+#         )
+#     email.attach_file(os.path.join(os.path.dirname(__file__), "pdf/productos.pdf"))
+
+#     email.send()
+#     return render(request, "enviado.html")
