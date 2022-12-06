@@ -26,4 +26,5 @@ urlpatterns = [
     path('verproductos/', verproductos, name="verproductos"),
     path('correoadjunto/', correoadjunto),
     path('publicidad/', publicidad),
+    path('graficos/', graficos),
 ]
