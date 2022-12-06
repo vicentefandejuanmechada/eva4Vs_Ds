@@ -21,4 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('cargamasiva/', carga_masiva),
     path('cargaclient/',carga_cliente),
+    path('obtproductoinfo/', obtproductoinfo),
+    path('compra/', venderprod, name="compra"),
+    path('verproductos/', verproductos, name="verproductos"),
+    path('correoadjunto/', correoadjunto),
+    path('publicidad/', publicidad),
 ]

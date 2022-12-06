@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Producto(models.Model):
-    codproducto = models.CharField(max_length=50)
+    codproducto = models.CharField(max_length=50,unique=True)
     nombreproducto = models.CharField(max_length=100)
     provedor = models.CharField(max_length=50)
     categoria = models.CharField(max_length=50)
@@ -13,7 +13,7 @@ class Producto(models.Model):
     stock = models.CharField(max_length=50)
 
 class clientes(models.Model):
-    numero_cliente=models.CharField(max_length=50)
+    numero_cliente=models.CharField(max_length=50,unique=True)
     rut=models.CharField(max_length=25)
     fecha_registro=models.CharField(max_length=50)
     apellido_p=models.CharField(max_length=60)
@@ -24,7 +24,7 @@ class clientes(models.Model):
     telefono=models.CharField(max_length=25) 
 
 class venta(models.Model):
-    boleta=models.CharField(max_length=50)
+    boleta=models.CharField(max_length=50,unique=True)
     Producto=models.CharField(max_length=50) 
     cantidad=models.CharField(max_length=50) 
     venta_bruto=models.CharField(max_length=50) 

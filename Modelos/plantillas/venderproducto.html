@@ -10,7 +10,7 @@
 </head>
 <body>
     
- <h1>detalle producto</h1>
+ <h1>Vender producto</h1>
  <div>
     <br>
  </div>
@@ -23,15 +23,3 @@
 <li>Valor peso: {{producto.valor_peso}}</li>
 <li>Valor euro: {{producto.valor_euro}}</li>
 <li>Stock: {{producto.stock}}</li>
-
-
-<form action="{% url 'compra' %}" method="post"> {% csrf_token %}
-    <input type="number" placeholder="Cantidad" name="cantidad_input" id="cantidad_input" >
-    <input type="number" name="codigo_input" id="codigo_input" value="{{ producto.codproducto }}">
-    <button class="btn btn-succes" type="submit" >vender</button>    
-</form>
-
-
-</body>
-
-</html>
