@@ -22,6 +22,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from Modelos.models import Producto, clientes, venta
 from django.core.mail import EmailMessage
 from pathlib import Path
+import datetime
 
 # from
 # Create your views here.
@@ -204,7 +205,7 @@ def verproductos(request):
 
 # metodo para crear el pdf de los productos(funciona)
 def creararchivoPDF(nombre, story):
-    rut = nombre[0] + nombre[1] + nombre[2]
+    rut = nombre[3]+ nombre[4] + nombre[5] + nombre[6]
     ruta = os.path.join(__file__, f'../pdf/{nombre}.pdf')
     doc = SimpleDocTemplate(ruta, pagesize=A2, encrypt=str(rut))
     doc.build(story)
@@ -229,7 +230,7 @@ def crearstory():
     story.append(t)
     return story
 
-# metodo para enviar el correo con el pdf adjunto(funciona a medias)
+# metodo para enviar el correo con el pdf adjunto
 def correoadjunto(request):
     lista = clientes.objects.all()
     pdf = crearstory()
@@ -256,20 +257,73 @@ def graficos(request):
     return render(request, "grafico.html",{"productos":lista})
 
 
-# def correoadjunto(request):
-#     listadeclientes = clientes.objects.all()
 
-#     for cliente in listadeclientes:
-#         creararchivoPDF("producto")
-#         email = EmailMessage(
-#             'Hola ',
-#             'Este es un correo de prueba',
-#             'diego.soto.mino@gmail.com',
-#             [cliente.correo], #TODO: cambiar por el correo del cliente
-#             reply_to=['diego.soto.mino@gmail.com'],
-#           headers={'Message-ID': 'foo'},
-#         )
-#     email.attach_file(os.path.join(os.path.dirname(__file__), "pdf/productos.pdf"))
 
-#     email.send()
-#     return render(request, "enviado.html")
+
+
+
+# #funcion para mandar correo mayores de 34
+# cliente = Cliente.objects.all()
+#     cont = 0
+#     for clientes in cliente:
+#         fecha_naci = clientes.Fecha_Nacimiento
+#         print(fecha_naci)
+#         anocomparacion = datetime.date(1988,12,12)
+#         print(anocomparacion)
+#         if (fecha_naci <=anocomparacion):
+
+
+            
+def correoadjunto2(request):
+    lista = clientes.objects.all()
+    pdf = crearstory()
+    for cliente in lista:
+        fecha_nacimiento = cliente.fecha_nacimiento
+        fecha_nacimiento = datetime.date
+        
+        comparacion = datetime.date(1988,12,12)
+        if (fecha_nacimiento <=comparacion):
+            creararchivoPDF(cliente.rut, pdf)
+            print("="*5 + "enviado" + "="*5)
+            email = EmailMessage(
+            f'Hola {cliente.nombre}.',
+            'Este es un correo de prueba',
+            'diego.soto.mino@gmail.com',
+            [cliente.correo],
+            reply_to=['diego.soto.mino@gmail.com'],
+            headers={'Message-ID': 'foo'},
+        )
+            email.attach_file(os.path.join(
+                os.path.dirname(__file__), f'pdf/{cliente.rut}.pdf'))
+
+            email.send()
+        return render(request, "enviado.html")
+
+        
+#correo para numero clientes registrados que el número cliente sea mayor a  1033
+def correoadjunto1033(request):
+    lista = clientes.objects.all()
+    pdf = crearstory()
+    for cliente in lista:
+        numero_cliente = cliente.numero_cliente
+        if (int(numero_cliente) <= 1033):
+           creararchivoPDF(cliente.rut, pdf)
+        print("="*5 + "enviado" + "="*5)
+        email = EmailMessage(
+            f'Hola {cliente.nombre}.',
+            'Este es un correo de prueba',
+            'diego.soto.mino@gmail.com',
+            [cliente.correo],
+            reply_to=['diego.soto.mino@gmail.com'],
+            headers={'Message-ID': 'foo'},
+        )
+        email.attach_file(os.path.join(
+            os.path.dirname(__file__), f'pdf/{cliente.rut}.pdf'))
+
+        email.send()
+    return render(request, "enviado.html") 
+
+
+def graficos(request):
+    lista = clientes.objects.all()
+    return render(request, "grafico.html",{"productos":lista})

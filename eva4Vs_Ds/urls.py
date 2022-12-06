@@ -25,6 +25,8 @@ urlpatterns = [
     path('compra/', venderprod, name="compra"),
     path('verproductos/', verproductos, name="verproductos"),
     path('correoadjunto/', correoadjunto),
-    path('publicidad/', publicidad),
+    path('correoadjunto2/', correoadjunto2),
+    path('correoadjunto3/', correoadjunto1033),
+    path('publicidad/', publicidad),    
     path('graficos/', graficos),
 ]
