@@ -5,8 +5,8 @@
     var myChart1 = new Chart(ctx1, {
         type: "bar",
         data: {
-            // llamar desde la base de datos
-            labels: [{% for i in data %}
+            // llamar desde modelo django
+            labels: ["{{ 
             datasets: [{
                     label: "USA",
                     data: [15, 30, 55, 65, 60, 80, 95],
